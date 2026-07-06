@@ -35,13 +35,13 @@ def load_report():
 
 
 def test_report_exists_and_valid_json():
-    """The agent produced a valid JSON report file."""
+    """Criterion 1: /app/report.json exists and contains valid JSON (a JSON object)."""
     report = load_report()
     assert isinstance(report, dict), "report.json must contain a JSON object"
 
 
 def test_report_has_exact_keys():
-    """The report contains exactly the required keys."""
+    """Criterion 2: the JSON object has exactly the keys total_requests, unique_ips, and top_path."""
     report = load_report()
     assert set(report.keys()) == {"total_requests", "unique_ips", "top_path"}, (
         f"unexpected keys: {sorted(report.keys())}"
@@ -49,18 +49,18 @@ def test_report_has_exact_keys():
 
 
 def test_total_requests_correct():
-    """total_requests matches the number of non-empty log lines."""
+    """Criterion 3: total_requests equals the number of non-empty lines in /app/access.log."""
     report = load_report()
     assert report["total_requests"] == expected()["total_requests"]
 
 
 def test_unique_ips_correct():
-    """unique_ips matches the number of distinct client IPs in the log."""
+    """Criterion 4: unique_ips equals the number of distinct client IPs in /app/access.log."""
     report = load_report()
     assert report["unique_ips"] == expected()["unique_ips"]
 
 
 def test_top_path_correct():
-    """top_path matches the most frequently requested path in the log."""
+    """Criterion 5: top_path equals the most frequently requested path in /app/access.log."""
     report = load_report()
     assert report["top_path"] == expected()["top_path"]
